@@ -1,7 +1,7 @@
-git clone --recursive https://github.com/parlance/ctcdecode.git
+#git clone --recursive https://github.com/parlance/ctcdecode.git
 pip install wget
-cd ctcdecode
-pip install .
+#cd ctcdecode
+#pip install .
 cd ..
 pip install torchsummaryX
 pip install kaggle
