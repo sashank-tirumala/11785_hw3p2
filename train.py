@@ -87,15 +87,15 @@ def train(_lr, _b, _e, _num_proc, _de, _dl, _dc, ):
             lr="{:.04f}".format(float(optimizer.param_groups[0]['lr'])))
             batch_bar.update() # Update tqdm bar
 
-        torch.save(model,'/models/hw3p2_model.pkl')
-        wandb.save(model,'/models/hw3p2_model.pkl')
+        torch.save(model,'models/hw3p2_model.pkl')
+        wandb.save('models/hw3p2_model.pkl')
         wandb.log({'loss_epoch' : float(total_loss / len(train_loader)), 
         'epoch': epoch+1, 
         'lr_epoch': float(optimizer.param_groups[0]['lr']) })
         batch_bar.close() # You need this to close the tqdm bar
         print("Epoch {}/{}: , Train Loss {:.04f}, Learning Rate {:.04f}".format(
         epoch + 1,
-        epochs,
+        _e,
         float(total_loss / len(train_loader)),
         float(optimizer.param_groups[0]['lr'])))
 
