@@ -15,9 +15,9 @@ import os
 import datetime
 
 # imports for decoding and distance calculation
-import ctcdecode
-import Levenshtein
-from ctcdecode import CTCBeamDecoder
+#import ctcdecode
+#import Levenshtein
+#from ctcdecode import CTCBeamDecoder
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 import warnings
@@ -51,7 +51,7 @@ def train(_lr, _b, _e, _num_proc, _de, _dl, _dc, ):
     model = setup_network(_de, _dl, _dc)
     criterion = torch.nn.CTCLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=_lr)
-    decoder = CTCBeamDecoder(labels=PHONEME_MAP,log_probs_input=True) 
+    #decoder = CTCBeamDecoder(labels=PHONEME_MAP,log_probs_input=True) 
     train_loader, val_loader, test_loader = setup_dataloaders(_b, _num_proc)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, _e * len(train_loader), eta_min=1e-6, last_epoch=- 1, verbose=False)
     torch.cuda.empty_cache()

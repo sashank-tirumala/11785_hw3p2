@@ -6,6 +6,9 @@ cd ..
 pip install torchsummaryX
 pip install kaggle
 pip install wandb
-pip install python-Levenshtein
+#pip install python-Levenshtein
 pip install tqdm
-mkdir models
+#mkdir models
+pip install scikit-learn
+sudo apt-get install unzip
+

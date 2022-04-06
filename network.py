@@ -15,9 +15,9 @@ import os
 import datetime
 
 # imports for decoding and distance calculation
-import ctcdecode
-import Levenshtein
-from ctcdecode import CTCBeamDecoder
+#import ctcdecode
+#import Levenshtein
+#from ctcdecode import CTCBeamDecoder
 
 import warnings
 from dataloader import *
@@ -34,7 +34,7 @@ class Network(nn.Module):
                                        nn.Conv1d(in_channels=128, out_channels=256, kernel_size=3, stride=1, padding=1),
                                        nn.BatchNorm1d(256), nn.Dropout(dropout_embed), nn.ReLU(inplace=True))
         
-        self.lstm = nn.LSTM(256, hidden_size=512, num_layers=4, batch_first=True, bidirectional=True, dropout= dropout_lstm ) # TODO: # Create a single layer, uni-directional LSTM with hidden_size = 256
+        self.lstm = nn.LSTM(256, hidden_size=512, num_layers=8, batch_first=True, bidirectional=True, dropout= dropout_lstm ) # TODO: # Create a single layer, uni-directional LSTM with hidden_size = 256
         # Use nn.LSTM() Make sure that you give in the proper arguments as given in https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html
 
         self.classification = nn.Sequential(nn.Linear(512*2,2048), nn.Dropout(dropout_classification), nn.ReLU(),
