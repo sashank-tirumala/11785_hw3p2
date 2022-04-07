@@ -87,8 +87,8 @@ def train(_lr, _b, _e, _num_proc, _de, _dl, _dc, _root_dir, _model_dir ):
             batch_bar.update() # Update tqdm bar
             break
 
-        torch.save(model,model_dir+"hw3p2_model_"+str(epoch)+".pkl")
-        torch.save(model,model_dir+"model_latest.pkl")
+        torch.save(model,_model_dir+"hw3p2_model_"+str(epoch)+".pkl")
+        torch.save(model,_model_dir+"model_latest.pkl")
         wandb.save(model_dir+"model_latest.pkl")
         wandb.log({'loss_epoch' : float(total_loss / len(train_loader)), 
         'epoch': epoch+1, 
