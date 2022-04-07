@@ -50,7 +50,7 @@ def train(_lr, _b, _e, _num_proc, _de, _dl, _dc, _root_dir, _model_dir ):
     model = setup_network(_de, _dl, _dc)
     criterion = torch.nn.CTCLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=_lr)
-    decoder = CTCBeamDecoder(labels=PHONEME_MAP,log_probs_input=True) 
+ #   decoder = CTCBeamDecoder(labels=PHONEME_MAP,log_probs_input=True) 
     train_loader, val_loader, test_loader = setup_dataloaders(_b, _num_proc, _root_dir)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, _e * len(train_loader), eta_min=1e-6, last_epoch=- 1, verbose=False)
     torch.cuda.empty_cache()
