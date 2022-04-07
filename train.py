@@ -28,9 +28,8 @@ from dataloader import *
 
 import wandb
 import argparse
-def setup_dataloaders(batch_size, num_proc):
-    root = "hw3p2_student_data/hw3p2_student_data" # TODO: Where your hw3p2_student_data folder is
-
+def setup_dataloaders(batch_size, num_proc, root = "hw3p2_student_data/hw3p2_student_data"):
+    
     train_data = LibriSamples(root, 'train')
     val_data = LibriSamples(root, 'dev')
     test_data = LibriSamplesTest(root, 'test_order.csv')
@@ -47,12 +46,12 @@ def setup_network( dropout_embed = 0.15, dropout_lstm = 0.35, dropout_classifica
     model = Network(dropout_embed , dropout_lstm , dropout_classification).to(device)
     return model
 
-def train(_lr, _b, _e, _num_proc, _de, _dl, _dc, ):
+def train(_lr, _b, _e, _num_proc, _de, _dl, _dc, _root_dir, _model_dir ):
     model = setup_network(_de, _dl, _dc)
     criterion = torch.nn.CTCLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=_lr)
     decoder = CTCBeamDecoder(labels=PHONEME_MAP,log_probs_input=True) 
-    train_loader, val_loader, test_loader = setup_dataloaders(_b, _num_proc)
+    train_loader, val_loader, test_loader = setup_dataloaders(_b, _num_proc, _root_dir)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, _e * len(train_loader), eta_min=1e-6, last_epoch=- 1, verbose=False)
     torch.cuda.empty_cache()
 
@@ -87,8 +86,9 @@ def train(_lr, _b, _e, _num_proc, _de, _dl, _dc, ):
             lr="{:.04f}".format(float(optimizer.param_groups[0]['lr'])))
             batch_bar.update() # Update tqdm bar
 
-        torch.save(model,'models/hw3p2_model.pkl')
-        wandb.save('models/hw3p2_model.pkl')
+        torch.save(model,model_dir+"hw3p2_model_"+str(epoch)+".pkl")
+        torch.save(model,model_dir+"model_latest.pkl")
+        wandb.save(model_dir+"model_latest.pkl")
         wandb.log({'loss_epoch' : float(total_loss / len(train_loader)), 
         'epoch': epoch+1, 
         'lr_epoch': float(optimizer.param_groups[0]['lr']) })
@@ -115,9 +115,11 @@ if(__name__ == "__main__"):
     parser.add_argument( '-de', '--dropout_embed', type=float, default=0.15, help = 'dropout percent in embedded layer')
     parser.add_argument( '-dl', '--dropout_lstm', type=float, default=0.35, help = 'dropout percent in lstm layer')
     parser.add_argument( '-dc', '--dropout_classification', type=float, default=0.2, help = 'dropout percent in classification layer')
+    parser.add_argument( '-rd', '--root_dir', type=str, default="hw3p2_student_data/hw3p2_student_data", help = 'root data directory')
+    parser.add_argument( '-md', '--model_dir', type=str, default="models/", help = 'model data directory')
 
     args = vars(parser.parse_args())
     wandb.config.update(args) # adds all of the arguments as config variables
     print(wandb.config)
     train(_lr = args['learning_rate'], _b = args['batch_size'], _e = args['epochs'], _num_proc = args['num_proc'], _de = args['dropout_embed']
-    , _dl = args['dropout_lstm'], _dc = args['dropout_classification'])
+    , _dl = args['dropout_lstm'], _dc = args['dropout_classification'], _root_dir = args['root_dir'], _model_dir = args['model_dir'])
