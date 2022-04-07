@@ -85,7 +85,6 @@ def train(_lr, _b, _e, _num_proc, _de, _dl, _dc, _root_dir, _model_dir ):
             loss="{:.04f}".format(float(total_loss / (i + 1))),
             lr="{:.04f}".format(float(optimizer.param_groups[0]['lr'])))
             batch_bar.update() # Update tqdm bar
-            break
 
         torch.save(model,_model_dir+"hw3p2_model_"+str(epoch)+".pkl")
         torch.save(model,_model_dir+"model_latest.pkl")
